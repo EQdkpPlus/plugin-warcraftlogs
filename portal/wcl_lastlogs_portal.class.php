@@ -1,0 +1,115 @@
+<?php
+/*	Project:	EQdkp-Plus
+ *	Package:	Warcraftlogs.com Plugin
+ *	Link:		http://eqdkp-plus.eu
+ *
+ *	Copyright (C) 2006-2015 EQdkp-Plus Developer Team
+ *
+ *	This program is free software: you can redistribute it and/or modify
+ *	it under the terms of the GNU Affero General Public License as published
+ *	by the Free Software Foundation, either version 3 of the License, or
+ *	(at your option) any later version.
+ *
+ *	This program is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *	GNU Affero General Public License for more details.
+ *
+ *	You should have received a copy of the GNU Affero General Public License
+ *	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+if (!defined('EQDKP_INC')){
+	header('HTTP/1.0 404 Not Found'); exit;
+}
+
+/*+----------------------------------------------------------------------------
+ | wcl_lastlogs_portal
+ +--------------------------------------------------------------------------*/
+class wcl_lastlogs_portal extends portal_generic{
+	
+	/**
+	 * Portal path
+	 */
+	protected static $path = 'wcl_lastlogs_portal';
+	/**
+	 * Portal data
+	 */
+	protected static $data = array(
+			'name'			=> 'Warcraftlogs.com Last Logs',
+			'version'		=> '0.1.0',
+			'author'		=> 'GodMod',
+			'contact'		=> 'https://eqdkp-plus.eu',
+			'description'	=> 'Displays latest Logs from the Warcraftlogs.com',
+			'lang_prefix'	=> 'wcl_',
+			'multiple'		=> true,
+	);
+	
+	protected static $apiLevel = 20;
+	
+	protected static $multiple = true;
+	
+	public function get_settings($state){		
+		$settings = array(
+				'output_count_limit'	=> array(
+						'type'		=> 'spinner',
+						'default'	=> '5',
+				),
+		);
+		
+		return $settings;
+	}
+	
+	/**
+	 * output
+	 * Get the portal output
+	 *
+	 * @returns string
+	 */
+	public function output(){
+		$arrReports = $this->pdc->get('plugins.warcraftlogs.reports');
+		if($arrReports === null){
+			$strGuildname = unsanitize($this->config->get('guildtag'));
+			$strServername = unsanitize($this->config->get('servername'));
+			$strServerregion = $this->config->get('uc_server_loc');
+			$strAPIKey = $this->config->get('api_key', 'warcraftlogs');
+			
+			$strReportsURL = "https://www.warcraftlogs.com:443/v1/reports/guild/".$strGuildname."/".$strServername."/".$strServerregion."?api_key=".$strAPIKey;
+			$strData = register('urlfetcher')->fetch($strReportsURL);
+			if($strData){
+				$arrReports = json_decode($strData, true);
+				
+				$this->pdc->put('plugins.warcraftlogs.reports', $arrReports, 600);
+			}
+			
+		}
+		
+		//Latest ontop
+		$arrReports = array_reverse($arrReports);
+		
+		$intMax = ($this->config('output_count_limit')) ? (int)$this->config('output_count_limit') : 5;
+		
+		if(is_array($arrReports)){
+			$i = 0;
+			
+			$strOut ="<table class='table fullwidth colorswitch'>";
+			foreach($arrReports as $arrReport){
+				if($i == $intMax) break;
+				
+				$date = $this->time->user_date(round($arrReport['start']/1000, 0), true);
+				
+				$strOut.="<tr><td><a href='https://www.warcraftlogs.com/reports/".sanitize($arrReport['id'])."' target='_blank'>".$date.' - '.sanitize($arrReport['title'])."</a></td></tr>";
+				$i++;
+			}
+			$strOut .= "</table>";
+			return $strOut;
+			
+		}
+		
+		$strOut = "Could not fetch data.";
+		
+		return $strOut;
+	}
+}
+
+?>

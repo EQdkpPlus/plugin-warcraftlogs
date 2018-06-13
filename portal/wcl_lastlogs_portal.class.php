@@ -74,7 +74,15 @@ class wcl_lastlogs_portal extends portal_generic{
 			$strServerregion = $this->config->get('uc_server_loc');
 			$strAPIKey = $this->config->get('api_key', 'warcraftlogs');
 			
+			$strServername = utf8_strtolower($strServername);
+			$strServername = str_replace(' ', '-', $strServername);
+			$strServername = str_replace("'", '', $strServername);
+			include_once($this->root_path.'plugins/warcraftlogs/includes/warcraftlogs_helper.class.php');
+			$objHelper = register('warcraftlogs_helper');
+			$strServername = $objHelper->remove_accents($strServername);
+		
 			$strReportsURL = "https://www.warcraftlogs.com:443/v1/reports/guild/".$strGuildname."/".$strServername."/".$strServerregion."?api_key=".$strAPIKey;
+			
 			$strData = register('urlfetcher')->fetch($strReportsURL);
 			if($strData){
 				$arrReports = json_decode($strData, true);

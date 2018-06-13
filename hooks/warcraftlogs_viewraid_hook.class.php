@@ -46,6 +46,14 @@ if (!class_exists('warcraftlogs_viewraid_hook')){
 			
 			$strGuildname = unsanitize($this->config->get('guildtag'));
 			$strServername = unsanitize($this->config->get('servername'));
+			
+			$strServername = utf8_strtolower($strServername);
+			$strServername = str_replace(' ', '-', $strServername);
+			$strServername = str_replace("'", '', $strServername);
+			include_once($this->root_path.'plugins/warcraftlogs/includes/warcraftlogs_helper.class.php');
+			$objHelper = register('warcraftlogs_helper');
+			$strServername = $objHelper->remove_accents($strServername);
+			
 			$strServerregion = $this->config->get('uc_server_loc');
 			
 			$date = date("Y-m-d", $strEventTime);			

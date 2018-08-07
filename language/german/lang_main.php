@@ -44,6 +44,6 @@ $lang = array(
 	'wcl_breadcrumb_settings'	=> 'Warcraftlogs Einstellungen',
 	'wcl_fs_general'			=> 'Allgemeines',
 	'wcl_f_api_key'				=> 'Öffentlicher API-Schlüssel',
-	'wcl_f_help_api_key'		=> 'Trage hier den öffentlichen Web API-Schlüssel von der Seite https://www.warcraftlogs.com/accounts/changeuser ein.',
+	'wcl_f_help_api_key'		=> 'Trage hier den öffentlichen Web API-Schlüssel von der Seite https://www.warcraftlogs.com/profile ein.',
 );
 ?>

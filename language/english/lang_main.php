@@ -44,6 +44,6 @@ $lang = array(
 		'wcl_breadcrumb_settings'	=> 'Warcraftlogs Settings',
 		'wcl_fs_general'			=> 'General',
 		'wcl_f_api_key'				=> 'Public API-Key',
-		'wcl_f_help_api_key'		=> 'Insert here the public API Key from the page https://www.warcraftlogs.com/accounts/changeuser',
+		'wcl_f_help_api_key'		=> 'Insert here the public API Key from the page https://www.warcraftlogs.com/profile',
 );
 ?>

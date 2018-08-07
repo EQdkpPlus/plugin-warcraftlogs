@@ -67,7 +67,7 @@ if (!class_exists('warcraftlogs_viewraid_hook')){
 			
 			$arrData = $this->pdc->get('plugins.warcraftlogs.reports.'.$strCachekey);
 			if($arrData === null){
-				$strReportsURL = "https://www.warcraftlogs.com:443/v1/reports/guild/".urlencode($strGuildname)."/".$strServername."/".$strServerregion."?start=".($strEventDay*1000)."&end=".(($strEventDay+24*3600)*1000)."&api_key=".$strAPIKey;
+				$strReportsURL = "https://www.warcraftlogs.com:443/v1/reports/guild/".rawurlencode($strGuildname)."/".$strServername."/".$strServerregion."?start=".($strEventDay*1000)."&end=".(($strEventDay+24*3600)*1000)."&api_key=".$strAPIKey;
 				$strData = register('urlfetcher')->fetch($strReportsURL);
 				if($strData){
 					$arrData = json_decode($strData, true);

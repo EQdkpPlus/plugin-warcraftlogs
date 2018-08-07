@@ -93,7 +93,7 @@ class wcl_lastlogs_portal extends portal_generic{
 		}
 		
 		//Latest ontop
-		$arrReports = array_reverse($arrReports);
+		//$arrReports = array_reverse($arrReports);
 		
 		$intMax = ($this->config('output_count_limit')) ? (int)$this->config('output_count_limit') : 5;
 		

@@ -81,7 +81,7 @@ class wcl_lastlogs_portal extends portal_generic{
 			$objHelper = register('warcraftlogs_helper');
 			$strServername = $objHelper->remove_accents($strServername);
 		
-			$strReportsURL = "https://www.warcraftlogs.com:443/v1/reports/guild/".urlencode($strGuildname)."/".$strServername."/".$strServerregion."?api_key=".$strAPIKey;
+			$strReportsURL = "https://www.warcraftlogs.com:443/v1/reports/guild/".rawurlencode($strGuildname)."/".$strServername."/".$strServerregion."?api_key=".$strAPIKey;
 			
 			$strData = register('urlfetcher')->fetch($strReportsURL);
 			if($strData){

@@ -25,7 +25,7 @@ if (!defined('EQDKP_INC')){
 
 class warcraftlogs extends plugin_generic {
 	public $vstatus		= 'Stable';
-	public $version		= '0.1.4';
+	public $version		= '0.1.5';
 	public $copyright 	= 'GodMod';
 
 	protected static $apiLevel = 23;
@@ -35,7 +35,7 @@ class warcraftlogs extends plugin_generic {
 
 		$this->add_dependency(array(
 				'plus_version' => '2.3',
-				'games'	=> array('wow')
+				'games'	=> array('wow', 'wowclassic')
 		));
 		
 		$this->add_data(array (

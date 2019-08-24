@@ -68,6 +68,9 @@ class wcl_lastlogs_portal extends portal_generic{
 	 */
 	public function output(){
 		$arrReports = $this->pdc->get('plugins.warcraftlogs.reports');
+		
+		include_once($this->root_path.'plugins/warcraftlogs/includes/warcraftlogs_helper.class.php');
+		$objHelper = register('warcraftlogs_helper');
 		if($arrReports === null){
 			$strGuildname = unsanitize($this->config->get('guildtag'));
 			$strServername = unsanitize($this->config->get('servername'));
@@ -77,12 +80,9 @@ class wcl_lastlogs_portal extends portal_generic{
 			$strServername = utf8_strtolower($strServername);
 			$strServername = str_replace(' ', '-', $strServername);
 			$strServername = str_replace("'", '', $strServername);
-			include_once($this->root_path.'plugins/warcraftlogs/includes/warcraftlogs_helper.class.php');
-			$objHelper = register('warcraftlogs_helper');
 			$strServername = $objHelper->remove_accents($strServername);
 		
-			$strReportsURL = "https://www.warcraftlogs.com:443/v1/reports/guild/".rawurlencode($strGuildname)."/".$strServername."/".$strServerregion."?api_key=".$strAPIKey;
-			
+			$strReportsURL = $objHelper->get_warcraftlogsurl()."/v1/reports/guild/".rawurlencode($strGuildname)."/".$strServername."/".$strServerregion."?api_key=".$strAPIKey;
 			$strData = register('urlfetcher')->fetch($strReportsURL);
 			if($strData){
 				$arrReports = json_decode($strData, true);
@@ -106,7 +106,7 @@ class wcl_lastlogs_portal extends portal_generic{
 				
 				$date = $this->time->user_date(round($arrReport['start']/1000, 0), true);
 				
-				$strOut.="<tr><td><a href='https://www.warcraftlogs.com/reports/".sanitize($arrReport['id'])."' target='_blank'>".$date.' - '.sanitize($arrReport['title'])."</a></td></tr>";
+				$strOut.="<tr><td><a href='".$objHelper->get_warcraftlogsurl()."/reports/".sanitize($arrReport['id'])."' target='_blank'>".$date.' - '.sanitize($arrReport['title'])."</a></td></tr>";
 				$i++;
 			}
 			$strOut .= "</table>";

@@ -130,4 +130,13 @@ class warcraftlogs_helper extends gen_class {
 			
 			return $string;
 	}
+	
+	function get_warcraftlogsurl(){
+		$strGame = registry::register('config')->get('default_game');
+		if($strGame == 'wow'){
+			return 'https://classic.warcraftlogs.com';
+		} else {
+			return 'https://www.warcraftlogs.com';
+		}
+	}
 }

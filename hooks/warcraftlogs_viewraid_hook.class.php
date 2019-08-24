@@ -67,7 +67,7 @@ if (!class_exists('warcraftlogs_viewraid_hook')){
 			
 			$arrData = $this->pdc->get('plugins.warcraftlogs.reports.'.$strCachekey);
 			if($arrData === null){
-				$strReportsURL = "https://www.warcraftlogs.com:443/v1/reports/guild/".rawurlencode($strGuildname)."/".$strServername."/".$strServerregion."?start=".($strEventDay*1000)."&end=".(($strEventDay+24*3600)*1000)."&api_key=".$strAPIKey;
+				$strReportsURL = $objHelper->get_warcraftlogsurl()."/v1/reports/guild/".rawurlencode($strGuildname)."/".$strServername."/".$strServerregion."?start=".($strEventDay*1000)."&end=".(($strEventDay+24*3600)*1000)."&api_key=".$strAPIKey;
 				$strData = register('urlfetcher')->fetch($strReportsURL);
 				if($strData){
 					$arrData = json_decode($strData, true);
@@ -80,12 +80,12 @@ if (!class_exists('warcraftlogs_viewraid_hook')){
 				foreach($arrData as $arrLogInfos){
 					$strID = $arrLogInfos['id'];
 					
-					$strOutputReportLinks .= '<a href="https://www.warcraftlogs.com/reports/'.$strID.'"><i class="fa fa-external-link fa-lg"></i> warcraftlogs.com</a><br/>';
+					$strOutputReportLinks .= '<a href="'.$objHelper->get_warcraftlogsurl().'/reports/'.$strID.'"><i class="fa fa-external-link fa-lg"></i> warcraftlogs.com</a><br/>';
 					
 					//Fetch Fights
 					$strFightData = $this->pdc->get('plugins.warcraftlogs.fights.'.$strID);
 					if($strFightData === null){
-						$strFightData = register('urlfetcher')->fetch("https://www.warcraftlogs.com:443/v1/report/fights/".$strID."?api_key=".$strAPIKey);
+						$strFightData = register('urlfetcher')->fetch($objHelper->get_warcraftlogsurl()."/v1/report/fights/".$strID."?api_key=".$strAPIKey);
 						if($strFightData){
 							$arrFightData = json_decode($strFightData, true);
 							
@@ -135,7 +135,7 @@ if (!class_exists('warcraftlogs_viewraid_hook')){
 					$i++;
 					$arrTries[$arrFightData['boss']]++;
 					
-					$strBosses .= '<div style="margin-bottom:5px;" class="col3"><a href="https://www.warcraftlogs.com/reports/'.sanitize($arrFightData['id']).'#fight='.sanitize($arrFightData['fightid']).'"><img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/bosses/'.sanitize($arrFightData['boss']).'-icon.jpg" style="max-height:22px;" /> '.sanitize($arrFightData['name']).' ('.$this->user->lang('wcl_tries').' '.$arrTries[$arrFightData['boss']].') '.(($arrFightData['kill']) ? "<i class='fa fa-check icon-color-green'></i>" : "<i class='fa fa-times icon-color-red'></i>").'</a> '.(($arrFightData['kill']) ? $arrFightData['duration'] : $arrFightData['info']).'</div>';
+					$strBosses .= '<div style="margin-bottom:5px;" class="col3"><a href="'.$objHelper->get_warcraftlogsurl().'/reports/'.sanitize($arrFightData['id']).'#fight='.sanitize($arrFightData['fightid']).'"><img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/bosses/'.sanitize($arrFightData['boss']).'-icon.jpg" style="max-height:22px;" /> '.sanitize($arrFightData['name']).' ('.$this->user->lang('wcl_tries').' '.$arrTries[$arrFightData['boss']].') '.(($arrFightData['kill']) ? "<i class='fa fa-check icon-color-green'></i>" : "<i class='fa fa-times icon-color-red'></i>").'</a> '.(($arrFightData['kill']) ? $arrFightData['duration'] : $arrFightData['info']).'</div>';
 				}
 				
 				$this->tpl->add_listener('viewraid_beforetables', '<div class="tableHeader warcraftlogs">

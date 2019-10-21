@@ -90,13 +90,14 @@ if (!class_exists('warcraftlogs_viewraid_hook')){
 							$arrFightData = json_decode($strFightData, true);
 							
 							$arrFights = $arrFightData['fights'];
+							$arrGlobalFights = array();
 							
 							foreach($arrFights as $arrMyFightData){
 								$duration = $arrMyFightData['end_time'] - $arrMyFightData['start_time'];
 								$duration = gmdate("H:i:s", ($duration /1000));
 								
 								
-								$arrGlobalFights[] = array(
+								$arrGlobalFights[] = array (
 										'boss' => (int)$arrMyFightData['boss'],
 										'name' => $arrMyFightData['name'],
 										'kill' => (strlen($arrMyFightData['kill'])),
@@ -108,7 +109,7 @@ if (!class_exists('warcraftlogs_viewraid_hook')){
 							}
 						}
 						
-						$this->pdc->put('plugins.warcraftlogs.fights.'.$strID, $arrGlobalFights, 6000);
+						$this->pdc->put('plugins.warcraftlogs.fights.'.$strID, $arrGlobalFights, 3600);
 					} else {
 						$arrGlobalFights = $strFightData;
 					}

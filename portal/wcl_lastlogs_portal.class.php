@@ -100,16 +100,26 @@ class wcl_lastlogs_portal extends portal_generic{
 		if(is_array($arrReports)){
 			$i = 0;
 			
-			$strOut ="<table class='table fullwidth colorswitch'>";
+			$strOut = '<div class="table" style="width:100%">';
 			foreach($arrReports as $arrReport){
 				if($i == $intMax) break;
 				
-				$date = $this->time->user_date(round($arrReport['start']/1000, 0), true);
+				$strOut .= '<div class="tr">';
 				
-				$strOut.="<tr><td><a href='".$objHelper->get_warcraftlogsurl()."/reports/".sanitize($arrReport['id'])."' target='_blank'>".$date.' - '.sanitize($arrReport['title'])."</a></td></tr>";
+				$strOut .= '<div class="td" style="width: 28px;"><a href="'.$objHelper->get_warcraftlogsurl()."/reports/".sanitize($arrReport['id']).'" target="_blank"><div class="user-avatar-small user-avatar-border">';
+				$strOut .='<img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/zones/zone-'.sanitize($arrReport['zone']).'.png" class="user-avatar small"/>';
+				$strOut .= '</div></a>';
+				$strOut .= '</div>';
+								
+				$date = $this->time->nice_date(round($arrReport['start']/1000, 0), 60*60*2*3, true);
+				$strOut .= '<div class="td"><a href="'.$objHelper->get_warcraftlogsurl()."/reports/".sanitize($arrReport['id']).'" target="_blank">'.sanitize($arrReport['title'])."</a>
+<div class=\"small\">".$date."</div>
+</div>";
+				
+				$strOut .= '</div>';
 				$i++;
 			}
-			$strOut .= "</table>";
+			$strOut .= "</div>";
 			return $strOut;
 			
 		}

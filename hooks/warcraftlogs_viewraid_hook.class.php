@@ -64,7 +64,10 @@ if (!class_exists('warcraftlogs_viewraid_hook')){
 			
 			$strCachekey = md5($strEventDay*1000);
 			
-			
+			$arrEventname = explode(' ', $strEventname);
+			$strNormalEventname = utf8_strtolower($arrEventname[0]);
+			$strNormalEventname = preg_replace('/[^A-Za-z0-9\-]/', '', $strNormalEventname); // Removes special chars.
+
 			$arrData = $this->pdc->get('plugins.warcraftlogs.reports.'.$strCachekey);
 			if($arrData === null){
 				$strReportsURL = $objHelper->get_warcraftlogsurl()."/v1/reports/guild/".rawurlencode($strGuildname)."/".$strServername."/".$strServerregion."?start=".($strEventDay*1000)."&end=".(($strEventDay+24*3600)*1000)."&api_key=".$strAPIKey;
@@ -76,10 +79,29 @@ if (!class_exists('warcraftlogs_viewraid_hook')){
 				}
 			}
 			
+			$strOutputReportLinks = "";
+			$arrGlobalFights = false;
+			
 			if(is_array($arrData)){
+				//try to find a match based on event name
+				$arrMatches = array();
+				
 				foreach($arrData as $arrLogInfos){
 					$strID = $arrLogInfos['id'];
 					
+					$strNormalTitle = utf8_strtolower($arrLogInfos['title']);
+					$strNormalTitle = preg_replace('/[^A-Za-z0-9\-]/', '', $strNormalTitle);
+					
+					if(strpos($strNormalTitle, $strNormalEventname) !== false){
+						$arrMatches[] = $arrLogInfos;
+					}
+				}
+
+				if(count($arrMatches) === 0) $arrMatches = $arrData;
+						
+				foreach($arrMatches as $arrLogInfos){
+					$strID = $arrLogInfos['id'];
+										
 					$strOutputReportLinks .= '<a href="'.$objHelper->get_warcraftlogsurl().'/reports/'.$strID.'"><i class="fa fa-external-link fa-lg"></i> warcraftlogs.com</a><br/>';
 					
 					//Fetch Fights
@@ -117,7 +139,7 @@ if (!class_exists('warcraftlogs_viewraid_hook')){
 			}
 				
 			
-			if($strOutputReportLinks){
+			if(strlen($strOutputReportLinks)){
 					$this->tpl->add_listener('viewraid_fieldset', '<dl>
 				<dt><label>'.$this->user->lang('wcl_log').'</label></dt>
 				<dd>'.$strOutputReportLinks.'
@@ -126,7 +148,7 @@ if (!class_exists('warcraftlogs_viewraid_hook')){
 			}
 			
 			
-			if($arrGlobalFights){
+			if($arrGlobalFights && is_array($arrGlobalFights)){
 				
 				$strBosses = "";
 				$i = 0;

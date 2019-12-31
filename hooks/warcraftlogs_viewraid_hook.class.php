@@ -64,9 +64,14 @@ if (!class_exists('warcraftlogs_viewraid_hook')){
 			
 			$strCachekey = md5($strEventDay*1000);
 			
-			$arrEventname = explode(' ', $strEventname);
-			$strNormalEventname = utf8_strtolower($arrEventname[0]);
-			$strNormalEventname = preg_replace('/[^A-Za-z0-9\-]/', '', $strNormalEventname); // Removes special chars.
+			$arrEventnames = preg_split('/(\s|&|\+)/', $strEventname);
+			foreach($arrEventnames as $key => $val){
+				$strNormalEventname = utf8_strtolower($val);
+				// Removes special chars.
+				$strNormalEventname = preg_replace('/[^A-Za-z0-9\-]/', '', $strNormalEventname);
+				$arrEventnames[$key] = $strNormalEventname;
+			}
+			 
 
 			$arrData = $this->pdc->get('plugins.warcraftlogs.reports.'.$strCachekey);
 			if($arrData === null){
@@ -92,8 +97,10 @@ if (!class_exists('warcraftlogs_viewraid_hook')){
 					$strNormalTitle = utf8_strtolower($arrLogInfos['title']);
 					$strNormalTitle = preg_replace('/[^A-Za-z0-9\-]/', '', $strNormalTitle);
 					
-					if(strpos($strNormalTitle, $strNormalEventname) !== false){
-						$arrMatches[] = $arrLogInfos;
+					foreach($arrEventnames as $key => $val){
+						if(strpos($strNormalTitle, $val) !== false){
+							$arrMatches[] = $arrLogInfos;
+						}
 					}
 				}
 

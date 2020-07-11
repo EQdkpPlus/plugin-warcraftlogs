@@ -83,6 +83,7 @@ class wcl_lastlogs_portal extends portal_generic{
 			$strServername = $objHelper->remove_accents($strServername);
 		
 			$strReportsURL = $objHelper->get_warcraftlogsurl()."/v1/reports/guild/".rawurlencode($strGuildname)."/".$strServername."/".$strServerregion."?api_key=".$strAPIKey;
+			
 			$strData = register('urlfetcher')->fetch($strReportsURL);
 			if($strData){
 				$arrReports = json_decode($strData, true);
@@ -107,7 +108,7 @@ class wcl_lastlogs_portal extends portal_generic{
 				$strOut .= '<div class="tr">';
 				
 				$strOut .= '<div class="td" style="width: 28px;"><a href="'.$objHelper->get_warcraftlogsurl()."/reports/".sanitize($arrReport['id']).'" target="_blank"><div class="user-avatar-small user-avatar-border">';
-				$strOut .='<img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/zones/zone-'.sanitize($arrReport['zone']).'.png" class="user-avatar small"/>';
+				$strOut .='<img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/zones/zone-'.sanitize($arrReport['zone']).'.png" class="user-avatar small" loading="lazy"/>';
 				$strOut .= '</div></a>';
 				$strOut .= '</div>';
 								

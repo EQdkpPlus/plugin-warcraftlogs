@@ -165,7 +165,7 @@ if (!class_exists('warcraftlogs_viewraid_hook')){
 					$i++;
 					$arrTries[$arrFightData['boss']]++;
 					
-					$strBosses .= '<div style="margin-bottom:5px;" class="col3"><a href="'.$objHelper->get_warcraftlogsurl().'/reports/'.sanitize($arrFightData['id']).'#fight='.sanitize($arrFightData['fightid']).'"><img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/bosses/'.sanitize($arrFightData['boss']).'-icon.jpg" style="max-height:22px;" loading="lazy"/> '.sanitize($arrFightData['name']).' ('.$this->user->lang('wcl_tries').' '.$arrTries[$arrFightData['boss']].') '.(($arrFightData['kill']) ? "<i class='fa fa-check icon-color-green'></i>" : "<i class='fa fa-times icon-color-red'></i>").'</a> '.(($arrFightData['kill']) ? $arrFightData['duration'] : $arrFightData['info']).'</div>';
+					$strBosses .= '<div style="margin-bottom:5px;" class="col3"><a href="'.$objHelper->get_warcraftlogsurl().'/reports/'.sanitize($arrFightData['id']).'#fight='.sanitize($arrFightData['fightid']).'"><img src="https://assets.rpglogs.com/img/warcraft/bosses/'.sanitize($arrFightData['boss']).'-icon.jpg" style="max-height:22px;" loading="lazy"/> '.sanitize($arrFightData['name']).' ('.$this->user->lang('wcl_tries').' '.$arrTries[$arrFightData['boss']].') '.(($arrFightData['kill']) ? "<i class='fa fa-check icon-color-green'></i>" : "<i class='fa fa-times icon-color-red'></i>").'</a> '.(($arrFightData['kill']) ? $arrFightData['duration'] : $arrFightData['info']).'</div>';
 				}
 				
 				$this->tpl->add_listener('viewraid_beforetables', '<div class="tableHeader warcraftlogs">

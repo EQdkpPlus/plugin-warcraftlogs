@@ -25,7 +25,7 @@ if (!defined('EQDKP_INC')){
 
 class warcraftlogs extends plugin_generic {
 	public $vstatus		= 'Stable';
-	public $version		= '0.2.4';
+	public $version		= '0.2.5';
 	public $copyright 	= 'GodMod';
 
 	protected static $apiLevel = 23;
